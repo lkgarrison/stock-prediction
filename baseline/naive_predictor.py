@@ -35,10 +35,10 @@ def get_number_of_extrema(stock_data):
     return len(argrelextrema(stock_values, np.greater)[0]) + len(argrelextrema(stock_values, np.less)[0])
 
 
-# returns a line of best fit for the last 100 days of the training data
+# returns a line of best fit for the last roughly 100 days of the training data
 # this is used to predict the next day
 def get_line_of_best_fit(training_data):
-    most_recent_data = np.array(training_data[-100:])
+    most_recent_data = np.array(training_data[-125:])
     num_extrema = get_number_of_extrema(most_recent_data)
 
     x = most_recent_data[:,0]
@@ -52,8 +52,8 @@ def get_line_of_best_fit(training_data):
 
 
 # try to predict first day that isn't already known
-def get_day_to_predict(training_data):
-    return get_last_known_day(training_data) + 1
+def get_day_to_predict(training_data, num_days_forward=1):
+    return get_last_known_day(training_data) + num_days_forward
 
 
 # returns the last known day number for the given stock data
@@ -75,19 +75,19 @@ if __name__ == "__main__":
     # track stats to keep track of average percent error
     num_days_predicted = 0
     total_percent_error = 0
+    num_days_forward = 5
 
-    while num_days_to_predict > 0:
+    while num_days_to_predict >= num_days_forward:
         # get data for all days up to the day to predict
         training_data = stock_data[:-num_days_to_predict]
 
         f = get_line_of_best_fit(training_data)
 
-        day_to_predict = get_day_to_predict(training_data)
+        # predict next day, x days in advance
+        day_to_predict = get_day_to_predict(training_data, num_days_forward)
 
         print f(day_to_predict), "vs", stock_data[int(day_to_predict)][1]
         total_percent_error += calc_percent_error(stock_data[int(day_to_predict)][1], f(day_to_predict))
-
-        f(day_to_predict)
 
         num_days_to_predict -= 1
         num_days_predicted += 1
