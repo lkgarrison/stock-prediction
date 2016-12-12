@@ -8,7 +8,7 @@ Beautiful Soup uses a pluggable XML or HTML parser to parse a
 provides methods and Pythonic idioms that make it easy to navigate,
 search, and modify the parse tree.
 
-Beautiful Soup works with Python 2.6 and up. It works better if lxml
+Beautiful Soup works with Python 2.7 and up. It works better if lxml
 and/or html5lib is installed.
 
 For more than you ever wanted to know about Beautiful Soup, see the
@@ -21,7 +21,7 @@ http://www.crummy.com/software/BeautifulSoup/bs4/doc/
 # found in the LICENSE file.
 
 __author__ = "Leonard Richardson (leonardr@segfault.org)"
-__version__ = "4.5.0"
+__version__ = "4.5.1"
 __copyright__ = "Copyright (c) 2004-2016 Leonard Richardson"
 __license__ = "MIT"
 
@@ -448,7 +448,7 @@ class BeautifulSoup(Tag):
         """Push a start tag on to the stack.
 
         If this method returns None, the tag was rejected by the
-        SoupStrainer. You should proceed as if the tag had not occured
+        SoupStrainer. You should proceed as if the tag had not occurred
         in the document. For instance, if this was a self-closing tag,
         don't call handle_endtag.
         """
