@@ -3,6 +3,7 @@ import csv
 import sys, os
 from collections import defaultdict, Counter
 from nltk.corpus import movie_reviews
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from bs4 import BeautifulSoup
 
 class NaiveSentiment(object):
@@ -31,19 +32,41 @@ class NaiveSentiment(object):
                 sentiment_counts[tag] += 1
         article_tag = max(sentiment_counts.iterkeys(), key=(lambda key: sentiment_counts[key]))
         sentiment_strength = sentiment_counts[article_tag] / float(sum(sentiment_counts.itervalues()))
-        print("This article was tagged as: " + article_tag + " with strength: " + str(sentiment_strength))
         return (article_tag, sentiment_strength)
 
+    def classify_article_nltk(self, article, sid):
+        sentiment_dict = Counter()
+        article = article.split('\n\n')
+        for line in article:
+            line = line.replace('\n', '')
+            ss = sid.polarity_scores(line)
+            for tag in ss:
+                sentiment_dict[tag] += ss[tag]
+        for tag in sentiment_dict:
+            sentiment_dict[tag] = sentiment_dict[tag] / float(len(article))
+        return sentiment_dict
+
+
     def extract_news_sentiment(self, filename):
-        with open(filename) as infile:
-            raw_text = infile.read()
-        soup = BeautifulSoup(raw_text, 'lxml')
-        docs = soup.findAll('doc')
-        for doc in docs:
-            print(soup.datestamp)
-            break
+        with open('company-sentiment.csv', 'wb') as outfile:
+            outfile.write('date,ticker,neg,pos\n')
+            sid = SentimentIntensityAnalyzer()
+            with open(filename) as infile:
+                raw_text = infile.read()
+            soup = BeautifulSoup(raw_text, 'lxml')
+            docs = soup.findAll('doc')
+            for doc in docs:
+                datetime = doc.datestamp.get('datetime')
+                ticker = doc.ticker.get('ticker')
+                doc_soup = BeautifulSoup(doc.text, 'lxml')
+                doc_text = doc_soup.get_text('text').strip()
+                sentiment_dict = self.classify_article_nltk(doc_text, sid)
+                neg = sentiment_dict['neg']
+                pos = sentiment_dict['pos']
+                csv_string = datetime + ',' + ticker + ',' + str(neg) + ',' + str(pos) + '\n'
+                outfile.write(csv_string)
 
 
 if __name__ == "__main__":
     naive_sent = NaiveSentiment()
-    naive_sent.extract_news_sentiment('../data/gigaword-condensed.sgml')
+    naive_sent.extract_news_sentiment('../data/gigaword-condensed2.sgml')
