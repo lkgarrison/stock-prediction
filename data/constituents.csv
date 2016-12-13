@@ -41,7 +41,8 @@ AMGN,Amgen,Health Care
 APH,Amphenol Corp A,Industrials
 APC,Anadarko Petroleum Corp,Energy
 ADI,Analog Devices,Information Technology
-ANTM,Anthem,Health Care
+ANTM,Anthem Inc,Health Care
+ANTM,"Anthem, Inc",Health Care
 AON,Aon plc,Financials
 APA,Apache Corporation,Energy
 AIV,Apartment Investment & Mgmt,Financials
@@ -119,7 +120,7 @@ CXO,Concho Resources,Energy
 COP,ConocoPhillips,Energy
 ED,Consolidated Edison,Utilities
 STZ,Constellation Brands,Consumer Staples
-GLW,Corning,Industrials
+GLW,Corning Inc,Industrials
 COST,Costco,Consumer Staples
 CCI,Crown Castle International Corp,Financials
 CSRA,CSRA,Information Technology
@@ -147,8 +148,8 @@ DOV,Dover Corp,Industrials
 DOW,Dow Chemical,Materials
 DPS,Dr Pepper Snapple Group,Consumer Staples
 DTE,DTE Energy,Utilities
-DD,Du Pont,Materials
-DD,DuPont,Materials
+DD,Du Pont Co,Materials
+DD,DuPont Co,Materials
 DUK,Duke Energy,Utilities
 DNB,Dun & Bradstreet,Industrials
 EMN,Eastman Chemical,Materials
@@ -414,7 +415,8 @@ SWN,Southwestern Energy,Energy
 SE,Spectra Energy Corp,Energy
 STJ,St Jude Medical,Health Care
 SWK,Stanley Black & Decker,Consumer Discretionary
-SPLS,Staples,Consumer Discretionary
+SPLS,"Staples, Inc",Consumer Discretionary
+SPLS,Staples Inc,Consumer Discretionary
 SBUX,Starbucks Corp,Consumer Discretionary
 HOT,Starwood Hotels & Resorts,Consumer Discretionary
 STT,State Street Corp,Financials

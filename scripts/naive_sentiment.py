@@ -1,10 +1,23 @@
 import nltk
 import csv
-import sys, os
 from collections import defaultdict, Counter
 from nltk.corpus import movie_reviews
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from bs4 import BeautifulSoup
+from dateutil import parser as dtparser
+from datetime import timedelta
+
+
+def get_stock_dates(ticker):
+    dates = set()
+    with open('../data/historical/' + ticker.upper() + '.csv') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for line in reader:
+            isodate = dtparser.parse(line['Date']).isoformat()
+            dates.add(isodate)
+    return dates
+
+stock_dates = get_stock_dates('IBM')
 
 class NaiveSentiment(object):
     def __init__(self):
@@ -48,6 +61,7 @@ class NaiveSentiment(object):
 
 
     def extract_news_sentiment(self, filename):
+        DAY_FRIDAY = 4  # monday:0, ...,  sunday: 6
         with open('company-sentiment.csv', 'wb') as outfile:
             outfile.write('date,ticker,neg,pos\n')
             sid = SentimentIntensityAnalyzer()
@@ -57,6 +71,11 @@ class NaiveSentiment(object):
             docs = soup.findAll('doc')
             for doc in docs:
                 datetime = doc.datestamp.get('datetime')
+                dateobj = dtparser.parse(datetime)
+                while dateobj.isoformat() not in stock_dates:
+                    dateobj = dateobj - timedelta(days=1)
+                
+                datetime = dateobj.isoformat()
                 ticker = doc.ticker.get('ticker')
                 doc_soup = BeautifulSoup(doc.text, 'lxml')
                 doc_text = doc_soup.get_text('text').strip()
@@ -69,4 +88,4 @@ class NaiveSentiment(object):
 
 if __name__ == "__main__":
     naive_sent = NaiveSentiment()
-    naive_sent.extract_news_sentiment('../data/gigaword-condensed2.sgml')
+    naive_sent.extract_news_sentiment('../data/gigaword-condensed.sgml')
